@@ -37,6 +37,9 @@
 (defun djikstra ()
   
   (setf dists (pairlis *sqs* (make-list (length *sqs*) :initial-element 9999)))
+  ;(setf prevs (pairlis *sqs* (make-list (length *sqs*) :initial-element 9999)))
+  (setf prevs '())
+
   (setf Q *sqs*)
   (setf dists (set-val '(0 0) 0 dists))
   (setf S '())
@@ -51,7 +54,14 @@
        (loop for u in (available-neighbours v)
 	  do (setf alt (1+ (get-val v dists)))
 	     (when (< alt (get-val u dists))
-	           (setf dists (set-val u alt dists)))))
+	           (progn (setf dists (set-val u alt dists))
+			  (setf prevs (append prevs (list (create-edge u v)))))
+			  ;(setf prevs (set-val u (list v) prevs)))
+			  )))
 
-  (return-from djikstra dists))
+  (return-from djikstra (list dists prevs)))
+
+(setf out (djikstra))
+(setf d (car out) p (second out))
+
 
