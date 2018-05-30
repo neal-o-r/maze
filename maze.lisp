@@ -68,15 +68,12 @@
   (if (in (create-edge (list x y) (list x (1+ y))) edges)
        *sp* *lin*))
 
-(defun remove-edge (edges e)
-  (remove e edges :test 'equalp))
-
 (defun print-maze (maze)
   (setf exit (create-edge (list (- (maze-width maze) 1) (- (maze-height maze) 1)) 
-			  (list (- (maze-width maze) 2) (- (maze-height maze) 1))))
-  (setf edges (remove-edge (maze-edges maze) exit))
+  			  (list (- (maze-width maze) 1) (maze-height maze))))
+  (setf edges (push exit (maze-edges maze)))
   (setf l (join *dot* *lin* (maze-width maze)))
-  (print (concatenate 'string *dot* *sp* (subseq l 0 (1- (length l)))))
+  (print (concatenate 'string *dot* *sp* (subseq l 0 (- (length l) 2))))
   (loop for y from 0 below (maze-height maze)
      do (setf s1 (loop for x from 0 below (maze-width maze) collect (concatenate 'string *sp* (vert-wall x y edges))))
         (setf s2 (loop for x from 0 below (maze-width maze) collect (concatenate 'string (horz-wall x y edges) *dot*)))
