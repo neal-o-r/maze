@@ -23,33 +23,35 @@
   (remove-if #'(lambda (n) (in n vis)) (available-neighbours sq)))
 
 
-(defun update-dists (i v dist)
-  (setf (aref dists (first i) (second i)) v))
+(defun get-val (k dict)
+  (cdr (assoc k dict :test 'equalp)))
 
-(defun get-dist (i dists)
-  (aref dists (first i) (second i)))
+(defun set-val (k v dict)
+  (setf dict (remove k dict :key #'car :test 'equalp))
+  (acons k v dict))
+
+(defun intersect-dict (s dict)
+  (remove-if #'(lambda (x) (in (car x) s)) dict))
+
 
 (defun djikstra ()
   
-  (setf dists (make-array (list *n* *n*) :initial-element 9999))
-  (setf prevs (make-array (list *n* *n*) :initial-element 9999))
-  (setf curr (list 0 0))
-  (setf visited '())
-  (update-dists curr 0 dists)
+  (setf dists (pairlis *sqs* (make-list (length *sqs*) :initial-element 9999)))
   (setf Q *sqs*)
+  (setf dists (set-val '(0 0) 0 dists))
+  (setf S '())
 
+  (setf i 0)
   (loop while Q
-     do	(remove curr Q :test 'equal)
-        (cons curr visited)
+    do (setf v (caar (sort (intersect-dict S dists) #'< :key #'cdr)))
+       (setf Q (remove v Q :test 'equalp))
+       (setf S (cons v S))
 
-	(loop for n in (unvisited-neighbours curr visited)
-	     (setf alt (1+ (get-dist curr dists)))
-	     (if (< alt (get-dist n dists))
-	         
-	       )
+       (incf i)
+       (loop for u in (available-neighbours v)
+	  do (setf alt (1+ (get-val v dists)))
+	     (when (< alt (get-val u dists))
+	           (setf dists (set-val u alt dists)))))
 
-	      ))
-	
-	)
-
+  (return-from djikstra dists))
 
