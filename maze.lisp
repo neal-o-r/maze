@@ -1,7 +1,7 @@
 
 (defstruct Edge :A :B)
 (defstruct Maze :height :width :edges)
-(defparameter *dot* "o")
+(defparameter *dot* "+")
 (defparameter *lin* "--")
 (defparameter *bar* "|")
 (defparameter *sp* "  ")
@@ -71,7 +71,7 @@
 (defun print-maze (maze)
   (setf exit (create-edge (list (- (maze-width maze) 1) (- (maze-height maze) 1)) 
   			  (list (- (maze-width maze) 1) (maze-height maze))))
-  (setf edges (push exit (maze-edges maze)))
+  (setf edges (cons exit (maze-edges maze)))
   (setf l (join *dot* *lin* (maze-width maze)))
   (print (concatenate 'string *dot* *sp* (subseq l 0 (- (length l) 2))))
   (loop for y from 0 below (maze-height maze)
