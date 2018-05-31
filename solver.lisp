@@ -1,6 +1,6 @@
 (load "maze.lisp")
 
-(defparameter *n* 20)
+(defparameter *n* 10)
 (defparameter *maze* (random-maze *n* *n*)) 
 (defparameter *sqs* (squares *n* *n*))
 (defparameter *exit* (create-edge (list (- (maze-width *maze*) 1) (- (maze-height *maze*) 1))
@@ -48,7 +48,7 @@
            (setf n (first (get-from current p)))
 	   (path target n p outpath))))
 
-(defun djikstra ()
+(defun dijkstra ()
  
   (setf dists (pairlis *sqs* (make-list (length *sqs*) :initial-element 9999)))
   (setf prevs '())
@@ -72,14 +72,14 @@
 			  (setf prevs (set-val u (list v) prevs)))
 			  )))
 
-  (return-from djikstra (list dists prevs)))
+  (return-from dijkstra (list dists prevs)))
 
-(setf out (djikstra))
+(setf out (dijkstra))
 (setf d (car out) p (second out))
 (defparameter *path* (path (list 0 0) (list (- *n* 1) (- *n* 1)) p '()))
 
 (defun vert-wall-path (x y edges)
-  (if (in (list x y) *path*) (if (= x 4) " o|" " o ")
+  (if (in (list x y) *path*) (if (= x (- *n* 1)) " *|" " * ")
     (if (in (create-edge (list x y) (list (1+ x) y)) edges)
        "   " "  |")))
 

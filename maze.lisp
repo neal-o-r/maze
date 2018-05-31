@@ -1,7 +1,7 @@
 
 (defstruct Edge :A :B)
 (defstruct Maze :height :width :edges)
-(defparameter *dot* "+")
+(defparameter *dot* "o")
 (defparameter *lin* "--")
 (defparameter *bar* "|")
 (defparameter *sp* "  ")
